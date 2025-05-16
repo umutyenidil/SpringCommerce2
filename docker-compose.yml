@@ -3,7 +3,7 @@ version: '4'
 services:
   mongodb:
     image: mongo:7.0.5
-    container_name: mongodb
+    container_name: sc2_mongodb
     ports:
       - "27017:27017"
     environment:
@@ -11,4 +11,23 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: umut
       MONGO_INITDB_DATABASE: product
     volumes:
-      - ./data:/data/db
+      - sc2_mongodb_vol:/data/db
+
+  mysql:
+    image: mysql:8.3.0
+    container_name: sc2_mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: umut
+      MYSQL_DATABASE: order
+    ports:
+      - "3306:3306"
+    volumes:
+      - sc2_mysql_vol:/var/lib/mysql
+
+networks:
+  sc2_network:
+    driver: bridge
+
+volumes:
+  sc2_mysql_vol:
+  sc2_mongodb_vol:
