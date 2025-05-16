@@ -1,5 +1,6 @@
 package com.umutyenidil.springcommerce2.service;
 
+import com.umutyenidil.springcommerce2.client.InventoryClient;
 import com.umutyenidil.springcommerce2.dto.OrderCreateRequest;
 import com.umutyenidil.springcommerce2.model.Order;
 import com.umutyenidil.springcommerce2.repository.OrderRepository;
@@ -13,8 +14,12 @@ import java.util.UUID;
 public class OrderService {
 
     private final OrderRepository orderRepository;
+    private final InventoryClient inventoryClient;
 
     public void placeOrder(OrderCreateRequest request) {
+        var isProductInStock = inventoryClient.isInStock(request.sku(), request.quantity());
+
+        if(!isProductInStock) throw new RuntimeException("Product is not in stock");
 
         var order = Order.builder()
                 .no(UUID.randomUUID().toString())
